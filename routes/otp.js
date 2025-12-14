@@ -4,8 +4,22 @@ import { sendOtpEmail } from "../services/emailService.js";
 
 const router = express.Router();
 
+/**
+ * In-memory store for OTP records.
+ * Key   → email
+ * Value → { otp, expiresAt, verified }
+ *
+ * NOTE:
+ * - This is suitable for development and small-scale demos.
+ * - In production, a shared store like Redis or a database should be used
+ *   to support scalability and persistence across server restarts.
+ */
 const otpStore = new Map();
 
+/**
+ * SEND OTP
+ * Generates a one-time password and sends it to the user's email address.
+ */
 router.post("/send", async (req, res) => {
   try {
     const { email } = req.body;
@@ -37,6 +51,11 @@ router.post("/send", async (req, res) => {
     });
   }
 });
+
+/**
+ * VERIFY OTP
+ * Validates the OTP entered by the user.
+ */
 router.post("/verify", async (req, res) => {
   try {
     const { email, otp } = req.body;
