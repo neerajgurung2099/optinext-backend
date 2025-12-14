@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import recommendRoute from "./routes/recommend.js";
+import otpRoutes from "./routes/otp.js";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // API routes
 app.use("/api", recommendRoute);
+app.use("/api/otp", otpRoutes);
 
 const PORT = process.env.PORT || 5000;
 
