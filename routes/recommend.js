@@ -10,6 +10,9 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API,
 });
 
+// POST /recommend
+// This endpoint receives a list of products and user history,
+// then asks the AI to recommend similar products based on user behavior
 router.post("/recommend", async (req, res) => {
   try {
     const { products, userHistory, itemsCount = 5 } = req.body;
@@ -19,6 +22,8 @@ router.post("/recommend", async (req, res) => {
         error: "Missing products or userHistory",
       });
     }
+
+    // Call Groq Chat Completion API to generate recommendations
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-20b",
       messages: [
