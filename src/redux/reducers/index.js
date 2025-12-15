@@ -1,11 +1,12 @@
-import authReducer from './authReducer';
-import basketReducer from './basketReducer';
-import checkoutReducer from './checkoutReducer';
-import filterReducer from './filterReducer';
-import miscReducer from './miscReducer';
-import productReducer from './productReducer';
-import profileReducer from './profileReducer';
-import userReducer from './userReducer';
+import authReducer from "./authReducer";
+import basketReducer from "./basketReducer";
+import checkoutReducer from "./checkoutReducer";
+import filterReducer from "./filterReducer";
+import miscReducer from "./miscReducer";
+import productReducer from "./productReducer";
+import profileReducer from "./profileReducer";
+import userReducer from "./userReducer";
+import adminReducer from "./adminReducer";
 
 const rootReducer = {
   products: productReducer,
@@ -15,7 +16,8 @@ const rootReducer = {
   filter: filterReducer,
   users: userReducer,
   checkout: checkoutReducer,
-  app: miscReducer
+  app: miscReducer,
+  admin: adminReducer,
 };
 
 export default rootReducer;

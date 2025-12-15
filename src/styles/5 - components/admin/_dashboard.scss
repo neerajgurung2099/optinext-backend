@@ -1,0 +1,33 @@
+
+$card-bg: #fff;
+$radius: 8px;
+
+.admin-dashboard {
+  padding: 1.5rem;
+
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    .stat-card {
+      background: $card-bg;
+      padding: 1rem;
+      border-radius: $radius;
+      text-align: center;
+    }
+  }
+
+  .chart-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    .chart-box {
+      background: $card-bg;
+      padding: 1rem;
+      border-radius: $radius;
+    }
+  }
+}
