@@ -57,8 +57,21 @@ router.post("/recommend", async (req, res) => {
       .replace(/```/g, "")
       .trim();
 
-    const parsed = JSON.parse(cleaned);
+    let parsed;
 
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch {
+      return res.status(500).json({
+        error: "Invalid AI response format",
+      });
+    }
+
+    if (!parsed.recommended || !Array.isArray(parsed.recommended)) {
+      return res.status(500).json({
+        error: "AI response missing recommended products",
+      });
+    }
     return res.json(parsed);
   } catch (err) {
     console.error("AI Recommendation Error:", err);
