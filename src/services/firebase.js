@@ -300,6 +300,72 @@ class Firebase {
       return [];
     }
   };
+  getAdminAnalytics = async () => {
+    const usersSnap = await this.db.collection("users").get();
+    const productsSnap = await this.db.collection("products").get();
+    const ordersSnap = await this.db.collection("orders").get();
+
+    // USERS PER MONTH
+    const monthlyUsers = {};
+
+    usersSnap.forEach((doc) => {
+      const data = doc.data();
+      const date = new Date(data.dateJoined);
+      const month = date.toLocaleString("default", { month: "short" });
+
+      monthlyUsers[month] = (monthlyUsers[month] || 0) + 1;
+    });
+
+    // REVENUE PER MONTH + TOTAL
+    let totalRevenue = 0;
+    const monthlyRevenue = {};
+    ordersSnap.forEach((doc) => {
+      const order = doc.data();
+      const createdAt = order.createdAt || order.date;
+
+      if (!createdAt) return;
+
+      const date =
+        typeof order.createdAt.toDate === "function"
+          ? order.createdAt.toDate()
+          : new Date(order.createdAt);
+
+      if (isNaN(date.getTime())) return;
+      const month = date.toLocaleString("default", { month: "short" });
+
+      let orderRevenue = 0;
+
+      if (typeof order.totalAmount === "number") {
+        orderRevenue = order.totalAmount;
+      } else if (Array.isArray(order.items)) {
+        order.items.forEach((item) => {
+          orderRevenue += (item.price || 0) * (item.quantity || 1);
+        });
+      }
+
+      totalRevenue += orderRevenue;
+      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + orderRevenue;
+    });
+
+    return {
+      stats: {
+        users: usersSnap.size,
+        products: productsSnap.size,
+        orders: ordersSnap.size,
+        revenue: Number(totalRevenue.toFixed(2)),
+      },
+      monthlyUsers: Object.keys(monthlyUsers).map((m) => ({
+        month: m,
+        users: monthlyUsers[m],
+      })),
+      monthlyRevenue: Object.entries(monthlyRevenue).map(
+        ([month, revenue]) => ({
+          month,
+          revenue: Number(revenue.toFixed(2)),
+        }),
+      ),
+    };
+  };
 }
 
 const firebaseInstance = new Firebase();
